@@ -44,7 +44,22 @@
     //import { app, auth } from '../config/firebase.js'
 
     import { query, collection, onSnapshot, where, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js'
-    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js'
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js'
+
+    window.onload = () => {
+        console.log("onload");
+        document.getElementById("search").addEventListener('keyup',() =>{
+            const texto = document.getElementById("search").value.trim().toLowerCase();
+            showCardVacinas(listaVacinas.filter(vacina => vacina.nome.toLowerCase().includes(texto)))
+        })
+        console.log("carregou")
+        carregarVacinas();
+
+        console.log("teste")
+
+        const btnDeslogar = document.getElementById("btnDeslogar");
+        btnDeslogar.addEventListener("click", deslogar);
+    }
 
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -55,8 +70,8 @@
             console.log(uid)
             // ...
         } else {
-            // User is signed out
-            // ...
+            alert("Você precisa estar logado para acessar essa página!")
+            goToEntrar();
         }
     });
 
@@ -89,12 +104,11 @@
     const carregarVacinas = () => {
         const q = query(collection(db, "vacinas"));
         console.log(q);
-
         onSnapshot(q, (querySnapshot) => {
             querySnapshot.forEach((documento) => {
                 listaVacinas.push({
                     id: documento.id,
-                    nome: documento.data().nome,
+                    nome: documento.data().nomeVacina,
                     dose: documento.data().dose,
                     dataVacinacao: documento.data().dataVacinacao,
                     proximaDose: documento.data().proximaDose
@@ -160,16 +174,18 @@
 
     }
 
-    window.onload = () => {
-        document.getElementById("search").addEventListener('keyup',() =>{
-            const texto = document.getElementById("search").value.trim()
-            showCardVacinas(listaVacinas.filter(vacina => vacina.nome.includes(texto)))
-        })
-        carregarVacinas();
-        console.log(uid);
+    function deslogar() {
+        signOut(auth).then(() => {
+            alert("Voce foi deslogado com sucesso!")
+            // Sign-out successful.
+            goToEntrar();
+        }).catch((error) => {
+            // An error happened.
+        });
     }
-
 </script>
+
+
 
 <body>
     <div class="navbar">
@@ -180,7 +196,7 @@
             <div class="botao" onclick="goToHome();">
                 Minhas Vacinas
             </div>
-            <div class="botao" onclick="goToEntrar();">
+            <div id="btnDeslogar" class="botao">
                 Logout
             </div>
         </div>
