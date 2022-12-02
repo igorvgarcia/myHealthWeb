@@ -1,0 +1,234 @@
+<html>
+
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="../navbar.css" />
+    <link rel="stylesheet" type="text/css" href="../home.css" />
+
+</head>
+
+<script>
+    function goToIndex() {
+        window.location = "index.html";
+    }
+</script>
+
+<script>
+    function goToNovaVacina() {
+        window.location = "novaVacina.html";
+    }
+</script>
+
+<script>
+    function goToHome() {
+        window.location = "home.html";
+    }
+</script>
+
+<script>
+    function goToEntrar() {
+        window.location = "entrar.html";
+    }
+</script>
+
+<script>
+    function goToEditarVacina() {
+        window.location = "editarVacina.html";
+    }
+</script>
+
+
+
+<script type="module">
+    import { db } from '../config/firestore.js'
+    //import { app, auth } from '../config/firebase.js'
+
+    import { query, collection, onSnapshot, where, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js'
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js'
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
+            const uid = user.uid;
+            console.log(uid)
+            // ...
+        } else {
+            // User is signed out
+            // ...
+        }
+    });
+
+    const idUsuario = onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
+            // ...
+            return user.uid;
+        } else {
+            // User is signed out
+            // ...
+        }
+    });
+
+    /*const getVacinas = () => {
+        const vacinas = [];
+        const q = query(collection(db, "vacinas"), where("UserID", "==", idUsuario));
+        onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                vacinas.push(doc.data());
+            });
+        });
+        return vacinas;
+    }*/
+
+
+    const listaVacinas = []
+
+    const carregarVacinas = () => {
+        const q = query(collection(db, "vacinas"));
+        console.log(q);
+
+        onSnapshot(q, (querySnapshot) => {
+            querySnapshot.forEach((documento) => {
+                listaVacinas.push({
+                    id: documento.id,
+                    nome: documento.data().nome,
+                    dose: documento.data().dose,
+                    dataVacinacao: documento.data().dataVacinacao,
+                    proximaDose: documento.data().proximaDose
+                })
+            })
+            console.log(listaVacinas)
+            showCardVacinas(listaVacinas)
+        });
+    }
+    const showCardVacinas = (lista) => {
+        document.getElementById("gradeCardsId").innerHTML = "";
+        lista.forEach((documento) => {
+            createCardVacina(documento.nome, documento.dose, documento.dataVacinacao, documento.proximaDose, documento.id);
+        })
+    }
+
+    const createCardVacina = (nome, dose, dataVacinacao, proximaDose, id) => {
+        const divCard = document.createElement("div");
+        divCard.classList.add("card");        
+
+        const divDadosCard = document.createElement("div");
+        divDadosCard.classList.add("dadosCard");
+
+        const divNomeVacina = document.createElement("div");
+        divNomeVacina.classList.add("nomeVacina");
+        divNomeVacina.innerHTML = nome;
+
+        const doseVacina = document.createElement("div");
+        doseVacina.classList.add("doseVacina");
+        doseVacina.innerHTML = dose;
+
+        const divDataVacinacao = document.createElement("div");
+        divDataVacinacao.classList.add("dataVacinacao");
+        divDataVacinacao.innerHTML = dataVacinacao;
+
+        const imgVacina = document.createElement("img");
+        imgVacina.classList.add("imgVacina");
+        imgVacina.src = "../Imagens/image-comprovante.png";
+
+        const divProximaDose = document.createElement("div");
+        divProximaDose.classList.add("proximaDoseCard");
+        divProximaDose.innerHTML = "Proxima dose em: " +proximaDose;
+
+        const inputHiddenId = document.createElement("input");
+        inputHiddenId.type = 'hidden'
+        inputHiddenId.hidden = id
+
+        divCard.appendChild(divDadosCard);
+        divDadosCard.appendChild(divNomeVacina);
+        divDadosCard.appendChild(doseVacina);
+        divDadosCard.appendChild(divDataVacinacao);
+        divCard.appendChild(imgVacina);
+        divCard.appendChild(divProximaDose);
+        divDadosCard.appendChild(inputHiddenId);
+
+
+        divCard.addEventListener("click", () => {
+            window.location.href = "editarVacina.html?id=" + id;
+        });
+
+        document.getElementById("gradeCardsId").appendChild(divCard);
+
+
+    }
+
+    window.onload = () => {
+        document.getElementById("search").addEventListener('keyup',() =>{
+            const texto = document.getElementById("search").value.trim()
+            showCardVacinas(listaVacinas.filter(vacina => vacina.nome.includes(texto)))
+        })
+        carregarVacinas();
+        console.log(uid);
+    }
+
+</script>
+
+<body>
+    <div class="navbar">
+        <div class="logoNavbar" onclick="goToIndex();">
+            <h1> <img src="../Imagens/iconVacina.png" /> MYHEALTH</h1>
+        </div>
+        <div class="botoesDireita">
+            <div class="botao" onclick="goToHome();">
+                Minhas Vacinas
+            </div>
+            <div class="botao" onclick="goToEntrar();">
+                Logout
+            </div>
+        </div>
+    </div>
+    <div class="corpo">
+        <div class="barraPesquisa">
+            <form></form>
+            <button type="submit">&#128269;</button>
+
+            <input type="text" id="search" placeholder="Pesquisar vacina..." style="
+                width: 90%;">
+            </form>
+        </div>
+
+        <div id="gradeCardsId" class="gradeCards">
+            <div id="cardModelo" class="card" onclick="goToEditarVacina();">
+                <div class="dadosCard">
+                    <div class="nomeVacina">NomeVacina</div>
+                    <div class="doseVacina">DoseVacina</div>
+                    <div class="dataVacina">DataVacina</div>
+                </div>
+                <img src="../Imagens/image-comprovante.png" alt="Avatar" style="width:100%">
+                <div class="proximaDoseCard"> Proxima dose em XX/XX/XXXX</div>
+            </div>
+            <div class="card" onclick="goToEditarVacina();">
+                <div class="dadosCard">
+                    <div class="nomeVacina">NomeVacina</div>
+                    <div class="doseVacina">DoseVacina</div>
+                    <div class="dataVacina">DataVacina</div>
+                </div>
+                <img src="../Imagens/image-comprovante.png" alt="Avatar" style="width:100%">
+                <div class="proximaDoseCard"> Proxima dose em XX/XX/XXXX</div>
+            </div>
+            <div class="card" onclick="goToEditarVacina();">
+                <div class="dadosCard">
+                    <div class="nomeVacina">NomeVacina</div>
+                    <div class="doseVacina">DoseVacina</div>
+                    <div class="dataVacina">DataVacina</div>
+                </div>
+                <img src="../Imagens/image-comprovante.png" alt="Avatar" style="width:100%">
+                <div class="proximaDoseCard"> Proxima dose em XX/XX/XXXX</div>
+            </div>
+
+        </div>
+        <div class="botaoNovaVacina" onclick="goToNovaVacina();">
+            Nova Vacina
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,247 @@
+<html>
+
+<head>
+    <title> Editar Vacina</title>
+    <link rel="stylesheet" type="text/css" href="../navbar.css" />
+    <link rel="stylesheet" type="text/css" href="../editarVacina.css" />
+    <link rel="stylesheet" type="text/css" href="../form.css" />
+</head>
+
+<script type="module">
+
+    import { db } from '../config/firestore.js'
+    import { auth } from '../config/firebase.js'
+    import { doc, setDoc, collection, getDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-firestore.js'
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
+
+    const getNomeVacina = () => {
+        return document.getElementById("nomeVacina").value;
+    }
+
+    const getDataVacinacao = () => {
+        return document.getElementById("dataVacinacao").value;
+    }
+
+    const getProximaDose = () => {
+        return document.getElementById("proximaDose").value;
+    }
+
+    const getDoseVacina = () => {
+        var dose1 = document.getElementById("1a Dose");
+        var dose2 = document.getElementById("2a Dose");
+        var dose3 = document.getElementById("3a Dose");
+        var doseReforco = document.getElementById("doseReforco");
+        var doseUnica = document.getElementById("doseUnica");
+        var result = " ";
+
+        if (dose1.checked == true) {
+            result = dose1.value;
+        }
+        else if (dose2.checked == true) {
+            result = dose2.value;
+        }
+        else if (dose3.checked == true) {
+            result = dose3.value;
+        }
+        else if (doseReforco.checked == true) {
+            result = doseReforco.value;
+        }
+        else if (doseUnica.checked == true) {
+            result = doseUnica.value;
+        }
+
+        return result;
+    }
+
+    const setNomeVacina = (nome) => {
+        document.getElementById("nomeVacina").value = nome;
+    }
+
+    const setDataVacinacao = (data) => {
+        document.getElementById("dataVacinacao").value = data;
+    }
+
+    const setProximaDose = (proxima) => {
+        document.getElementById("proximaDose").value = proxima;
+    }
+
+    const setDose = (dose) => {
+        var dose1 = document.getElementById("1a Dose");
+        var dose2 = document.getElementById("2a Dose");
+        var dose3 = document.getElementById("3a Dose");
+        var doseReforco = document.getElementById("doseReforco");
+        var doseUnica = document.getElementById("doseUnica");
+
+        if (dose == dose1.value) {
+            dose1.checked = true;
+        }
+        else if (dose == dose2.value) {
+            dose2.checked = true;
+        }
+        else if (dose == dose3.value) {
+            dose3.checked = true;
+        }
+        else if (dose == doseReforco.value) {
+            doseReforco.checked = true;
+        }
+        else if (dose == doseUnica.value) {
+            doseUnica.checked = true;
+        }
+    }
+
+    const excluirVacina = (id) => {
+        deleteDoc(doc(db, "vacinas", id))
+            .then(() => {
+                console.log("Document successfully deleted!");
+                goToHome();
+            }).catch((error) => {
+                console.error("Error removing document: ", error);
+            });
+    }
+
+    const alterarVacina = (id) => {
+        const nomeVacina = getNomeVacina();
+        const dataVacinacao = getDataVacinacao();
+        const proximaDose = getProximaDose();
+        const doseVacina = getDoseVacina();
+
+        
+        const idUsuario = auth.currentUser.uid;
+        const docRef = doc(db, "vacinas", id);
+        updateDoc(docRef, {
+            nome: nomeVacina,
+            dose: doseVacina,
+            dataVacinacao: dataVacinacao,
+            proximaDose: proximaDose,
+        })
+            .then(() => {
+                alert("Vacina alterada com sucesso!");
+                goToHome();
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("Erro ao alterar vacina!");
+            });
+    }
+
+    window.onload = () => {
+        const id = new URLSearchParams(window.location.search).get("id")
+
+        const botaoAlterar = document.getElementById("botaoSalvar")
+        botaoAlterar.addEventListener("click", () => {alterarVacina(id)})
+
+        const botaoExcluir = document.getElementById("botaoExcluir");
+        botaoExcluir.addEventListener("click", () => {excluirVacina(id)})
+
+        console.log(id);
+        const docRef = doc(db, "vacinas", id);
+        
+        if(id){
+            getDoc(doc(db, "vacinas", id))
+            .then((doc)=>{
+                setNomeVacina(doc.data().nome);
+                setDataVacinacao(doc.data().dataVacinacao);
+                setProximaDose(doc.data().proximaDose);
+                setDose(doc.data().dose)
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+            }else {
+                alert("Vacina não encontrada!");
+            }
+        }
+    
+</script>
+<script>
+    function goToIndex() {
+        window.location = "index.html";
+    }
+</script>
+
+<script>
+    function goToNovaVacina() {
+        window.location = "novaVacina.html";
+    }
+</script>
+
+<script>
+    function goToHome() {
+        window.location = "home.html";
+    }
+</script>
+
+<script>
+    function goToEntrar() {
+        window.location = "entrar.html";
+    }
+</script>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logoNavbar" onclick="goToIndex()">
+            <h1> <img src="../Imagens/iconVacina.png" /> MYHEALTH</h1>
+        </div>
+
+        <div class="botoesDireita">
+            <div class="botao" onclick="goToHome();">
+                Minhas Vacinas
+            </div>
+            <div class="botao" onclick="goToEntrar();">
+                Logout
+            </div>
+        </div>
+    </div>
+    <!-- FIM DA NAVBAR -->
+
+    <div class="corpo">
+        <form class="formulario">
+            <div id="campoDataVacinacao" class="campoAndLabel">
+                <label class="ladoEsquerdo" for="dataVacinacao">Data da Vacinação</label>
+                <input class="ladoDireito" type="date" id="dataVacinacao" name="dataVacinacao">
+            </div>
+            <div id="campoNomeVacina" class="campoAndLabel">
+                <label class="ladoEsquerdo" for="nomeVacina">Nome da Vacina</label>
+                <input class="ladoDireito" type="text" id="nomeVacina" name="nomeVacina">
+            </div>
+            <div id="doseVacina" class="campoAndLabel">
+                <label class="ladoEsquerdo" for="doseVacina">Dose da Vacina</label>
+                <div class="ladoDireito, radio, checkboxstyle">
+                    <input type="radio" id="1a Dose" name="dose" value="1a Dose">
+                    <label class="labelRadio" for="masculino">1a Dose</label>
+                    <input type="radio" id="2a Dose" name="dose" value="2a Dose">
+                    <label class="labelRadio" for="feminino">2a Dose</label>
+                    <input type="radio" id="3a Dose" name="dose" value="3a dose">
+                    <label class="labelRadio" for="masculino">3a dose</label>
+                    <input type="radio" id="doseReforco" name="dose" value="Reforco">
+                    <label class="labelRadio" for="masculino">Dose Reforço</label>
+                    <input type="radio" id="doseUnica" name="dose" value="Dose Unica">
+                    <label class="labelRadio" for="masculino">Dose Unica</label>
+                </div>
+            </div>
+            <div id="comprovanteVacina" class="campoAndLabel">
+                <label class="ladoEsquerdo" for="comprovanteVacina">Comprovante da Vacina</label>
+                <input class="ladoDireito" type="file" id="comprovanteVacina" name="comprovanteVacina">
+            </div>
+            <div id="campoProximaDose" class="campoAndLabel">
+                <label class="ladoEsquerdo" for="proximaDose">Próxima Dose</label>
+                <input class="ladoDireito" type="date" id="proximaDose" name="proximaDose">
+            </div>
+
+        </form>
+
+        <div class="botoesInferior">
+            <div class="botaoCadastrar" id="botaoSalvar">
+                Salvar alterações
+            </div>
+
+            <div class="botaoExcluir" id="botaoExcluir">
+                Excluir vacina
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label, input {
+    font-family: Averia Libre;
+    margin-left: 5px;
+}
+
+.campoForm {
+    display: flex;
+    padding: 10px;
+}

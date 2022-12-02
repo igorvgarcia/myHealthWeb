@@ -1,0 +1,136 @@
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="../navbar.css" />
+    <link rel="stylesheet" type="text/css" href="../form.css" />
+    <link rel="stylesheet" type="text/css" href="../criarConta.css" />
+</head>
+
+<script>
+    function goToIndex() {
+        window.location = "index.html";
+    }
+</script>
+
+<script>
+    function goToHome() {
+        window.location = "home.html";
+    }
+</script>
+
+<script>
+    function goToEntrar() {
+        window.location = "entrar.html";
+    }
+</script>
+
+<script type="module">
+    import { app, auth } from "../config/firebase.js";
+    import { sendEmailVerification, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+
+    const getEmail = () => {
+        return document.getElementById("txtEmail").value;
+    }
+
+    const getSenha = () => {
+
+        return document.getElementById("txtSenha").value;
+    }
+
+
+    const cadastrar = () => {
+        const email = getEmail();
+        const senha = getSenha();
+
+        const senha1 = document.getElementById("txtSenha").value;
+        const senha2 = document.getElementById("txtSenhaConfere").value;
+
+
+
+        if (senha1 == senha2) {
+            createUserWithEmailAndPassword(auth, email, senha)
+                .then((user) => {
+                    console.log(JSON.stringify(user));
+                    alert("Cadastro realizado com sucesso!");
+                    sendEmailVerification(auth.currentUser)
+
+                })
+                .catch((error) => {
+                    console.log(error);
+
+
+                    alert("Erro ao realizar cadastro!");
+                });
+        } else {
+
+            var textoAviso = document.getElementById("camposDeSenha").innerHTML;
+            textoAviso = textoAviso + "<p>Senha não confere.</p>";
+
+            document.getElementById("camposDeSenha").innerHTML = textoAviso;
+
+
+        }
+
+    }
+
+
+    window.onload = () => {
+        const btnCadastrar = document.getElementById("btnCadastrar");
+        btnCadastrar.addEventListener("click", cadastrar);
+    }
+</script>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logoNavbar" onclick="goToIndex()">
+            <h1> <img src="../Imagens/iconVacina.png" /> MYHEALTH</h1>
+        </div>
+
+        <div class="botao" onclick="goToEntrar()">
+            <button type="button">Já tenho conta</button>
+        </div>
+    </div>
+    <!-- FIM DA NAVBAR -->
+
+    <div class="corpo">
+        <form class="formulario">
+            <div id="divNomeCompleto" class="campoAndLabel">
+                <label class="ladoEsquerdo">Nome Completo</label>
+                <input class="ladoDireito" type="text" name="nome" placeholder="Nome Completo">
+            </div>
+            <div id="divSexo" class="campoAndLabel">
+                <label class="ladoEsquerdo">Sexo</label>
+                <div class="ladoDireito, radio">
+                    <input type="radio" id="masculino" name="sexo" value="masculino">
+                    <label class="labelRadio" for="masculino">Masculino</label>
+                    <input type="radio" id="feminino" name="sexo" value="feminino">
+                    <label class="labelRadio" for="feminino">Feminino</label>
+                </div>
+
+            </div>
+            <div id="divDataNascimento" class="campoAndLabel">
+                <label class="ladoEsquerdo">Data de Nascimento</label>
+                <input class="ladoDireito" type="date" name="dataNascimento">
+            </div>
+            <div id="divEmail" class="campoAndLabel">
+                <label class="ladoEsquerdo">Email</label>
+                <input id="txtEmail" class="ladoDireito" type="email" name="email" placeholder="Email">
+            </div>
+            <div id="camposDeSenha"class="camposDeSenha">
+                <div id="divSenha" class="campoAndLabel">
+                    <label class="ladoEsquerdo">Senha</label>
+                    <input id="txtSenha" class="ladoDireito" type="password" name="senha" placeholder="Senha">
+                </div>
+                <div id="divConfirmarSenha" class="campoAndLabel">
+                    <label class="ladoEsquerdo">Confirmar Senha</label>
+                    <input id="txtSenhaConfere" class="ladoDireito" type="password" name="confirmarSenha"
+                        placeholder="Repetir Senha">
+                </div>
+            </div>
+            <div id="btnCadastrar" class="botaoCadastrar">Cadastrar</div>
+
+        </form>
+    </div>
+
+</body>

@@ -1,0 +1,83 @@
+<html>
+
+<head>
+    <title>Entrar - MyHealth</title>
+    <link rel="stylesheet" type="text/css" href="../navbar.css" />
+    <link rel="stylesheet" type="text/css" href="../entrar.css" />
+    <link rel="stylesheet" type="text/css" href="../form.css" />
+
+    <title>Entrar</title>
+
+
+    <script>
+        function goToIndex() {
+            window.location = "index.html";
+        }
+
+    </script>
+
+    <script type="module">
+        import { app, auth} from "../config/firebase.js";
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+
+        const getEmail = () => {
+            return document.getElementById("txtEmail").value;
+        }
+
+        const getSenha = () => {
+            return document.getElementById("txtSenha").value;
+        }
+
+        const logar = () => {
+            const email = getEmail();
+            const senha = getSenha();
+
+            signInWithEmailAndPassword(auth, email, senha)
+            .then( (user) => {
+                console.log(JSON.stringify(user));
+                //alert("Login realizado com sucesso!");
+                window.location.href = "./home.html";
+            })
+            .catch( (error) => {
+                console.log(error);
+                alert("Erro ao realizar login!");
+            });
+
+        }
+
+        window.onload = () => {
+            const btnEntrar = document.getElementById("btnEntrar");
+            btnEntrar.addEventListener("click", logar);
+        }
+    </script>
+</head>
+
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logoNavbar" onclick="goToIndex()">
+            <h1> <img src="../Imagens/iconVacina.png" /> MYHEALTH</h1>
+        </div>
+
+    </div>
+    <!-- FIM DA NAVBAR -->
+
+    <div class="corpo">
+        <form class="formulario">
+            <div id="EmailDIV" class="campoAndLabel">
+                <label class="ladoEsquerdo">Email</label>
+                <input id="txtEmail" class="ladoDireito" type="email" placeholder="Digite seu email" />
+            </div>
+            <div id="SenhaDIV" class="campoAndLabel">
+                <label class="ladoEsquerdo">Senha</label>
+                <input id="txtSenha" class="ladoDireito" type="password" placeholder="Digite sua senha" />
+            </div>
+            <div id="btnEntrar" class="botaoEntrar">Entrar</div>
+        </form>
+        <a href="RecuperarSenha.html" id="RecuperarSenha">Esqueci minha senha</a>
+    </div>
+
+</body>
+
+</html>

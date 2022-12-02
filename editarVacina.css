@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Averia+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+.logoNavbar {
+    cursor: pointer;
+}
+
+.corpo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    background-color:#ADD4D0;
+    height: 90%
+}
+
+.checkbox {
+    display: flex;
+}
+
+.campoAndLabel{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 700px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+/* controle da div do formulario */
+.ladoEsquerdo{
+   display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: 'Averia Libre';
+    color: #fff;
+    width: 30%;
+
+
+}
+
+.labelRadio{
+    color: #fff;
+ 
+ }
+
+ input::placeholder {
+    color: #3F92C5;
+}
+
+.ladoDireito{
+    display: flex;
+
+    font-family: 'Averia Libre';
+    color: #3F92C5;
+    width: 70%
+
+}
+
+.formulario{
+   
+}
+
+label {
+    display:block;
+    margin:5px 0;
+  }
+
+.campoLabel{
+    flex-direction: row;
+    display: flex;
+    margin: 5px 0;
+}
+
+.botaoSalvarAlterar{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #37BD6D;
+    color: #fff;
+    font-family: 'Averia Libre';
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+
+}
+
+.botaoCadastrar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 5px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    
+    background-color: #37BD6D;
+    color: #fff;
+    font-family: 'Averia Libre';
+    border-color: #37BD6D;
+
+    cursor: pointer;    
+
+}
+
+.botao{
+    cursor: pointer;
+
+    background: #419ED7;
+    border: 1px solid #419ED7;
+
+    font-family: Averia Libre;
+    font-style: normal;
+
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 30px;
+    letter-spacing: 0em;
+    
+    color: #FFFFFF;
+
+    margin: 5px;
+}
+
+.botaoExcluir{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin : 5px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    
+    background-color: #FF8383;
+    color: #fff;
+    font-family: 'Averia Libre';
+    border-color: #FF8383;
+
+    cursor: pointer;    
+}
+
+.botoesInferior{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.checkboxstyle{
+    display: flex;
+    flex-direction: row;
+}
+

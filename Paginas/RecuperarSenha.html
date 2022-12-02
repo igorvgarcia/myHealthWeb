@@ -1,0 +1,85 @@
+<html>
+
+<head>
+    <title>Recuperar senha</title>
+    <link rel="stylesheet" type="text/css" href="../navbar.css" />
+    <link rel="stylesheet" type="text/css" href="../entrar.css" />
+    <link rel="stylesheet" type="text/css" href="../form.css" />
+
+
+</head>
+
+<script>
+    function goToIndex() {
+        window.location = "index.html";
+    }
+</script>
+
+<script type="module">
+    import { app, auth} from "../config/firebase.js";
+    import { sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    const getEmail =( ) => {
+        return document.getElementById("txtEmail").value;
+    }
+
+    const RecuperarSenha =() => {
+        const email = getEmail();
+        sendPasswordResetEmail(auth, email)
+        .then(() => {
+            alert("Email enviado com sucesso!");
+            console.log('Solicitação realizada com sucesso')
+        })
+        .catch(() => {
+            alert("Email não encontrado!");
+            console.log('Erro ao solicitar reset de senha')
+        })
+    }
+
+    window.onload = () => {
+        document.getElementById("btnRecuperar").addEventListener("click", RecuperarSenha);
+    }
+</script>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logoNavbar" onclick="goToIndex()">
+            <h1> <img src="../Imagens/iconVacina.png" /> MYHEALTH</h1>
+        </div>
+    </div>
+    <!-- FIM DA NAVBAR -->
+
+    <div class="corpo">
+        <form class="formulario">
+            <div id="Email" class="campoAndLabel">
+                <label class="ladoEsquerdo">Email</label>
+                <input id="txtEmail" class="ladoDireito" type="email" name="email" placeholder="Email">
+            </div>
+            <div id="btnRecuperar" class="botaoEntrar">Recuperar Senha</div>
+
+        </form>
+    </div>
+
+</body>
+
+<script src="index.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-auth-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBZgdPi637NQcicnI0YZ4kxHzBwiFauZDA",
+        authDomain: "myhealth-7466a.firebaseapp.com",
+        projectId: "myhealth-7466a",
+        storageBucket: "myhealth-7466a.appspot.com",
+        messagingSenderId: "208223926138",
+        appId: "1:208223926138:web:1b19823aa1ff3f2cfa08c3"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+</script>
+
+
+
+</html>

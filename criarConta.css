@@ -1,0 +1,94 @@
+.logoNavbar {
+    cursor: pointer;    
+}
+
+.corpo{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color:#ADD4D0;
+    height: 90%;
+}
+
+.formulario{
+    
+}
+
+.ladoEsquerdo{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: 'Averia Libre';
+    color: #fff;
+    width: 30%;
+
+}
+
+.labelRadio{
+   color: #fff;
+
+}
+
+input::placeholder {
+    color: #3F92C5;
+}
+
+.ladoDireito{
+    display: flex;
+
+    font-family: 'Averia Libre';
+    color: #3F92C5;
+    width: 70%
+
+}
+
+.campoAndLabel{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 700px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.radiusForm {
+    display: flex;
+    flex-direction: row;
+}
+
+.botaoCadastrar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    
+    background-color: #37BD6D;
+    color: #fff;
+    font-family: 'Averia Libre';
+    border-color: #37BD6D;
+
+    cursor: pointer;    
+
+}
+
+.camposDeSenha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+p {
+    font-family: 'Averia Libre';
+    color: #FD7979;
+
+}
+
+.botao, button{
+    cursor: pointer;    
+
+}
+
