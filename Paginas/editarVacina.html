@@ -152,7 +152,7 @@
         if(id){
             getDoc(doc(db, "vacinas", id))
             .then((doc)=>{
-                setNomeVacina(doc.data().nome);
+                setNomeVacina(doc.data().nomeVacina);
                 setDataVacinacao(doc.data().dataVacinacao);
                 setProximaDose(doc.data().proximaDose);
                 setDose(doc.data().dose)

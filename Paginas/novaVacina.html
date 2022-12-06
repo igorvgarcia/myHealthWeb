@@ -85,11 +85,14 @@
             idUsuario: idUsuario
         }).then(() => {
             alert("Vacina cadastrada com sucesso!");
+            goToHome()
         }).catch((error) => {
             alert("Erro ao cadastrar vacina!");
         });
     }
 
+
+    //ADICIONA VACINA SEM O ID ÚNICO. 
         //const docRef = doc(db, "vacinas", nomeVacina);
         /*setDoc(docRef, {
             nome: nomeVacina,

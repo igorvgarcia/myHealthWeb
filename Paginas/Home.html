@@ -47,15 +47,12 @@
     import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js'
 
     window.onload = () => {
-        console.log("onload");
         document.getElementById("search").addEventListener('keyup',() =>{
             const texto = document.getElementById("search").value.trim().toLowerCase();
-            showCardVacinas(listaVacinas.filter(vacina => vacina.nome.toLowerCase().includes(texto)))
+            showCardVacinas(listaVacinasUser.filter(vacina => vacina.nome.toLowerCase().includes(texto)))
         })
-        console.log("carregou")
-        carregarVacinas();
-
-        console.log("teste")
+        //carregarVacinas(); -- CARREGA AS VACINAS DE TODOS OS USUARIOS
+        carregarVacinasUser();
 
         const btnDeslogar = document.getElementById("btnDeslogar");
         btnDeslogar.addEventListener("click", deslogar);
@@ -64,40 +61,48 @@
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/firebase.User
+            
             const uid = user.uid;
             console.log(uid)
-            // ...
         } else {
-            alert("Você precisa estar logado para acessar essa página!")
             goToEntrar();
         }
     });
 
     const idUsuario = onAuthStateChanged(auth, (user) => {
         if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/firebase.User
-            // ...
+            
             return user.uid;
         } else {
-            // User is signed out
-            // ...
+            goToEntrar();
         }
     });
 
-    /*const getVacinas = () => {
-        const vacinas = [];
-        const q = query(collection(db, "vacinas"), where("UserID", "==", idUsuario));
-        onSnapshot(q, (querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                vacinas.push(doc.data());
-            });
-        });
-        return vacinas;
-    }*/
+    const listaVacinasUser = []
 
+    const carregarVacinasUser = onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const q = query(collection(db, "vacinas"), where("idUsuario", "==", user.uid));
+            console.log(q);
+            onSnapshot(q, (querySnapshot) => {
+                querySnapshot.forEach((documento) => {
+                    listaVacinasUser.push({
+                        id: documento.id,
+                        nome: documento.data().nomeVacina,
+                        dose: documento.data().dose,
+                        dataVacinacao: documento.data().dataVacinacao,
+                        proximaDose: documento.data().proximaDose
+                    })
+                })
+                console.log(listaVacinasUser)
+                showCardVacinas(listaVacinasUser)
+            });
+        } else {
+            goToEntrar();
+        }
+    })
+
+/* CODIGO PARA CARREGAR TODAS AS VACINAS 
 
     const listaVacinas = []
 
@@ -118,6 +123,9 @@
             showCardVacinas(listaVacinas)
         });
     }
+*/
+
+
     const showCardVacinas = (lista) => {
         document.getElementById("gradeCardsId").innerHTML = "";
         lista.forEach((documento) => {
@@ -176,9 +184,10 @@
 
     function deslogar() {
         signOut(auth).then(() => {
+            
+            goToEntrar()
             alert("Voce foi deslogado com sucesso!")
-            // Sign-out successful.
-            goToEntrar();
+
         }).catch((error) => {
             // An error happened.
         });
@@ -212,7 +221,7 @@
         </div>
 
         <div id="gradeCardsId" class="gradeCards">
-            <div id="cardModelo" class="card" onclick="goToEditarVacina();">
+           <!--<div id="cardModelo" class="card" onclick="goToEditarVacina();">
                 <div class="dadosCard">
                     <div class="nomeVacina">NomeVacina</div>
                     <div class="doseVacina">DoseVacina</div>
@@ -238,7 +247,7 @@
                 </div>
                 <img src="../Imagens/image-comprovante.png" alt="Avatar" style="width:100%">
                 <div class="proximaDoseCard"> Proxima dose em XX/XX/XXXX</div>
-            </div>
+            </div>-->
 
         </div>
         <div class="botaoNovaVacina" onclick="goToNovaVacina();">
